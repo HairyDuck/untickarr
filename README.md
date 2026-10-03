@@ -1,16 +1,19 @@
 # Untickarr
 
-Skip junk files inside Transmission torrents before they land in your library.
+[![License: MIT](https://img.shields.io/github/license/HairyDuck/untickarr)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/HairyDuck/untickarr?style=flat)](https://github.com/HairyDuck/untickarr/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/HairyDuck/untickarr)](https://github.com/HairyDuck/untickarr/issues)
+[![GitHub release](https://img.shields.io/github/v/release/HairyDuck/untickarr?include_prereleases&sort=semver)](https://github.com/HairyDuck/untickarr/releases)
+[![GHCR](https://img.shields.io/badge/ghcr.io-hairyduck%2Funtickarr-blue?logo=docker)](https://github.com/HairyDuck/untickarr/pkgs/container/untickarr)
 
-Untickarr is a small Docker app for the Servarr stack. It watches torrents with *arr labels (for example `tv-sonarr`, `tv-radarr`, `whisparr`), **unticks** blacklisted files (`.nfo`, `.exe`, images), and if a torrent is *only* junk it can **remove** it, **blocklist** the release in Sonarr or Radarr, and notify you.
+Open source (MIT). Skip junk files inside Transmission torrents before they land in your library.
+
+Untickarr is a Docker app for the Servarr stack. It watches torrents with *arr labels (for example `tv-sonarr`, `tv-radarr`, `whisparr`), **unticks** blacklisted files (`.nfo`, `.exe`, images), and if a torrent is *only* junk it can **remove** it, **blocklist** the release in Sonarr or Radarr, and notify you.
 
 It is **not** [Cleanuparr](https://github.com/Cleanuparr/Cleanuparr). Cleanuparr handles stalled, slow, and failed-import queues. Untickarr handles file selection inside Transmission. They work well together.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![GHCR](https://img.shields.io/badge/ghcr.io-hairyduck%2Funtickarr-blue?logo=docker)](https://github.com/HairyDuck/untickarr/pkgs/container/untickarr)
-
 > [!IMPORTANT]
-> **What it does**
+> **Features**
 > - Untick blacklisted extensions on tagged Transmission torrents.
 > - Optionally remove torrents that contain only unwanted files.
 > - Blocklist the release in Sonarr or Radarr (by tag) and optionally search again.
@@ -98,15 +101,16 @@ Tags must match Transmission labels. Sonarr/Radarr custom formats and download-c
 
 Settings persist in `/data/settings.json`. Mount `/data` so they survive restarts.
 
-## Related
-
-- Predecessor (archived): [transmission-cleanup-synology](https://github.com/HairyDuck/transmission-cleanup-synology)
-- Queue cleaner: [Cleanuparr](https://github.com/Cleanuparr/Cleanuparr)
-
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Security reports: [SECURITY.md](SECURITY.md).
+Untickarr is free and open source under the [MIT License](LICENSE). Issues, pull requests, and discussion are welcome.
+
+- [Contributing guide](CONTRIBUTING.md)
+- [Code of conduct](CODE_OF_CONDUCT.md)
+- [Security policy](SECURITY.md)
+- [Report a bug](https://github.com/HairyDuck/untickarr/issues/new?template=bug.yml)
+- [Request a feature](https://github.com/HairyDuck/untickarr/issues/new?template=feature.yml)
 
 ## License
 
-[MIT](LICENSE)
+Copyright (c) 2026 HairyDuck. Released under the [MIT License](LICENSE). You may use, copy, modify, and distribute this software, including commercially, provided the licence notice is kept.
