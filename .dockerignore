@@ -1,0 +1,13 @@
+.git
+.github
+data
+__pycache__
+*.pyc
+.venv
+.env
+*.tgz
+*.md
+CONTRIBUTING.md
+SECURITY.md
+settings.example.json
+scripts

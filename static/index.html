@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d1117" />
+  <title>Untickarr</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --arr-sidebar: #1c2c36;
+      --arr-sidebar-hover: #243946;
+      --arr-accent: #35c0ed;
+      --arr-accent-hover: #5dd0f5;
+      --arr-content-bg: #0d1117;
+      --arr-card-bg: #161b22;
+      --arr-card-border: #30363d;
+      --arr-input-bg: #21262d;
+      --arr-input-border: #30363d;
+      --arr-input-text: #e6edf3;
+      --arr-input-placeholder: #8b949e;
+      --arr-label: #8b949e;
+      --arr-text: #e6edf3;
+      --arr-text-muted: #8b949e;
+      --sidebar-width: 14rem;
+      --header-height: 3.5rem;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Open Sans', system-ui, sans-serif; background: var(--arr-content-bg); color: var(--arr-text); padding-bottom: env(safe-area-inset-bottom); }
+    .sidebar { background: var(--arr-sidebar); }
+    .sidebar a:hover { background: var(--arr-sidebar-hover); }
+    .sidebar a.active { background: var(--arr-sidebar-hover); border-left: 3px solid var(--arr-accent); }
+    .card { background: var(--arr-card-bg); border: 1px solid var(--arr-card-border); border-radius: 8px; }
+    .input, .input-select {
+      width: 100%;
+      min-height: 44px;
+      background: var(--arr-input-bg) !important;
+      border: 1px solid var(--arr-input-border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--arr-input-text) !important;
+      font-size: 16px;
+    }
+    .input::placeholder { color: var(--arr-input-placeholder); }
+    .input:focus, .input-select:focus {
+      outline: none;
+      border-color: var(--arr-accent);
+      box-shadow: 0 0 0 2px rgba(53, 192, 237, 0.25);
+    }
+    @media (min-width: 768px) {
+      .input, .input-select { min-height: auto; padding: 8px 12px; font-size: 14px; }
+    }
+    .input-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238b949e'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 18px; padding-right: 40px; }
+    .input-select option { background: var(--arr-card-bg); color: var(--arr-text); }
+    .label { display: block; font-size: 13px; font-weight: 500; color: var(--arr-label); margin-bottom: 6px; }
+    .btn-primary { background: var(--arr-accent); color: #0d1117; font-weight: 600; padding: 10px 18px; min-height: 44px; border-radius: 8px; border: none; cursor: pointer; transition: background 0.15s, transform 0.05s; }
+    .btn-primary:hover { background: var(--arr-accent-hover); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:focus-visible, .btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--arr-content-bg), 0 0 0 4px var(--arr-accent); }
+    .btn-secondary { background: var(--arr-input-bg); color: var(--arr-text); border: 1px solid var(--arr-card-border); padding: 10px 18px; min-height: 44px; border-radius: 8px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+    .btn-secondary:hover { background: var(--arr-card-border); }
+    @media (min-width: 768px) {
+      .btn-primary, .btn-secondary { min-height: auto; padding: 8px 16px; }
+    }
+    .toggle-wrap { display: inline-flex; align-items: center; gap: 12px; cursor: pointer; min-height: 44px; padding: 4px 0; }
+    .toggle { position: relative; width: 48px; height: 28px; flex-shrink: 0; background: var(--arr-input-bg); border: 1px solid var(--arr-card-border); border-radius: 14px; transition: background 0.2s; }
+    .toggle.checked { background: var(--arr-accent); border-color: var(--arr-accent); }
+    .toggle-dot { position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .toggle.checked .toggle-dot { transform: translateX(20px); }
+    .nav-section { display: none; }
+    .nav-section.active { display: block; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .blacklist-cat { background: var(--arr-input-bg); border: 1px solid var(--arr-card-border); border-radius: 8px; padding: 12px 14px; }
+    .blacklist-cat h4 { font-size: 11px; font-weight: 600; color: var(--arr-text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .blacklist-chks { display: flex; flex-wrap: wrap; gap: 8px 14px; }
+    .blacklist-chks label { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--arr-text); cursor: pointer; min-height: 28px; }
+    .blacklist-chks input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--arr-accent); flex-shrink: 0; }
+    .blacklist-tag { display: inline-flex; align-items: center; gap: 4px; background: var(--arr-card-border); color: var(--arr-text); padding: 6px 10px; border-radius: 6px; font-size: 13px; }
+    .blacklist-tag button { background: none; border: none; color: var(--arr-text-muted); cursor: pointer; padding: 2px 4px; line-height: 1; min-width: 28px; min-height: 28px; border-radius: 4px; }
+    .blacklist-tag button:hover { color: var(--arr-text); background: rgba(255,255,255,0.08); }
+    .whitelist-box { background: rgba(63, 185, 80, 0.08); border: 1px solid rgba(63, 185, 80, 0.3); border-radius: 8px; padding: 12px 14px; }
+    .whitelist-box .label { color: #7ee787; }
+    .log-card { background: var(--arr-input-bg); border: 1px solid var(--arr-card-border); border-radius: 8px; overflow: hidden; }
+    .log-card.success { border-left: 4px solid #3fb950; }
+    .log-card.error { border-left: 4px solid #f85149; }
+    .log-body { font-family: ui-monospace, monospace; font-size: 12px; line-height: 1.6; color: var(--arr-text-muted); padding: 14px; max-height: 14rem; overflow-y: auto; white-space: pre-wrap; word-break: break-word; -webkit-overflow-scrolling: touch; }
+    @media (min-width: 768px) { .log-body { max-height: 12rem; } }
+    .log-meta { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--arr-card-border); }
+    .log-badge { font-size: 11px; font-weight: 600; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; }
+    .log-badge.ok { background: rgba(63, 185, 80, 0.2); color: #3fb950; }
+    .log-badge.err { background: rgba(248, 81, 73, 0.2); color: #f85149; }
+    @media (max-width: 767px) {
+      .sidebar { transform: translateX(-100%); transition: transform 0.25s ease, box-shadow 0.25s ease; width: min(280px, 85vw); left: 0; top: 0; bottom: 0; z-index: 40; box-shadow: none; }
+      .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.4); }
+      .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 35; opacity: 0; transition: opacity 0.25s; }
+      .sidebar-overlay.open { display: block; opacity: 1; }
+      .main-content { margin-left: 0 !important; padding-top: var(--header-height); }
+      .page-header { display: flex !important; }
+    }
+    .sidebar-overlay { display: none; }
+    .page-header { display: none; position: fixed; top: 0; left: 0; right: 0; height: var(--header-height); background: var(--arr-sidebar); border-bottom: 1px solid var(--arr-card-border); z-index: 32; align-items: center; padding: 0 1rem; gap: 0.75rem; }
+    .menu-btn { width: 44px; height: 44px; border: none; background: transparent; color: white; cursor: pointer; border-radius: 8px; padding: 10px; display: flex; align-items: center; justify-content: center; }
+    .menu-btn:hover { background: var(--arr-sidebar-hover); }
+    .menu-btn svg { width: 22px; height: 22px; }
+    .section-title { font-size: 1.15rem; margin-bottom: 0.25rem; }
+    @media (min-width: 768px) { .section-title { font-size: 1.25rem; } }
+    .toast { position: fixed; bottom: calc(1rem + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%) translateY(80px); background: var(--arr-card-bg); border: 1px solid var(--arr-card-border); padding: 12px 20px; border-radius: 8px; font-size: 14px; z-index: 50; opacity: 0; transition: transform 0.3s, opacity 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
+</head>
+<body class="min-h-screen flex">
+  <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
+  <!-- Mobile header -->
+  <header class="page-header" aria-label="Main menu">
+    <button type="button" id="menuBtn" class="menu-btn" aria-label="Open menu">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <span class="font-semibold text-white truncate">Untickarr</span>
+  </header>
+  <!-- Left sidebar (Arr-style) -->
+  <aside id="sidebar" class="sidebar w-56 min-h-screen flex-shrink-0 flex flex-col fixed left-0 top-0 z-40" aria-label="Navigation">
+    <div class="p-4 border-b border-white/10">
+      <h1 class="text-lg font-bold text-white tracking-tight">Untickarr</h1>
+      <p class="text-xs text-white/60 mt-0.5">Transmission file filter</p>
+    </div>
+    <nav class="flex-1 py-3">
+      <a href="#dashboard" class="nav-link block px-4 py-2.5 text-sm text-white/90 hover:text-white" data-section="dashboard">Dashboard</a>
+      <a href="#transmission" class="nav-link block px-4 py-2.5 text-sm text-white/90 hover:text-white" data-section="transmission">Transmission</a>
+      <a href="#tags" class="nav-link block px-4 py-2.5 text-sm text-white/90 hover:text-white" data-section="tags">Tags &amp; Blacklist</a>
+      <a href="#when-unwanted" class="nav-link block px-4 py-2.5 text-sm text-white/90 hover:text-white" data-section="when-unwanted">When Unwanted</a>
+      <a href="#sonarr" class="nav-link block px-4 py-2.5 text-sm text-white/90 hover:text-white" data-section="sonarr">Sonarr</a>
+      <a href="#radarr" class="nav-link block px-4 py-2.5 text-sm text-white/90 hover:text-white" data-section="radarr">Radarr</a>
+      <a href="#pushover" class="nav-link block px-4 py-2.5 text-sm text-white/90 hover:text-white" data-section="pushover">Pushover</a>
+      <a href="#schedule" class="nav-link block px-4 py-2.5 text-sm text-white/90 hover:text-white" data-section="schedule">Schedule</a>
+      <a href="#logs" class="nav-link block px-4 py-2.5 text-sm text-white/90 hover:text-white" data-section="logs">Logs</a>
+      <a href="#backup" class="nav-link block px-4 py-2.5 text-sm text-white/90 hover:text-white" data-section="backup">Backup</a>
+    </nav>
+    <div class="p-3 border-t border-white/10 space-y-2">
+      <button type="button" id="testAll" class="btn-secondary w-full text-center text-sm py-2">Test all connections</button>
+      <button type="button" id="previewRun" class="btn-secondary w-full text-center text-sm py-2">Preview (dry run)</button>
+      <button type="button" id="runNow" class="btn-secondary w-full text-center text-sm py-2">Run now</button>
+      <p class="text-xs text-white/50 px-1">Tests use saved settings.</p>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main id="mainContent" class="main-content flex-1 pl-56 min-h-screen">
+    <div class="max-w-3xl mx-auto py-6 px-4 sm:py-8 sm:px-6">
+      <form id="form">
+        <!-- Dashboard -->
+        <section id="section-dashboard" class="nav-section active card p-6 mb-6">
+          <h2 class="text-xl font-semibold text-white mb-1">Dashboard</h2>
+          <p class="text-sm text-[var(--arr-text-muted)] mb-5">Overview and quick actions.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div class="blacklist-cat">
+              <h4>Last run</h4>
+              <div id="dashboardLastRun" class="text-sm text-[var(--arr-text)]">—</div>
+              <div id="dashboardProcessedRemoved" class="text-xs text-[var(--arr-text-muted)] mt-1"></div>
+            </div>
+            <div class="blacklist-cat">
+              <h4>Scheduler</h4>
+              <div id="dashboardScheduler" class="text-sm text-[var(--arr-text)]">—</div>
+              <span id="dashboardPausedBadge" class="hidden text-xs font-medium px-2 py-0.5 rounded bg-amber-500/20 text-amber-400">Paused</span>
+            </div>
+          </div>
+          <h3 class="text-sm font-semibold text-[var(--arr-text)] mt-6 mb-2">All-time totals</h3>
+          <div class="grid grid-cols-3 gap-3 mb-2">
+            <div class="blacklist-cat text-center">
+              <h4>Processed</h4>
+              <div id="alltimeProcessed" class="text-xl font-semibold text-[var(--arr-accent)]">0</div>
+            </div>
+            <div class="blacklist-cat text-center">
+              <h4>Removed</h4>
+              <div id="alltimeRemoved" class="text-xl font-semibold text-[var(--arr-text)]">0</div>
+            </div>
+            <div class="blacklist-cat text-center">
+              <h4>Blocklisted</h4>
+              <div id="alltimeBlocklisted" class="text-xl font-semibold text-[var(--arr-text)]">0</div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+            <div class="blacklist-cat">
+              <h4>Per tag</h4>
+              <div id="alltimeByTag" class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                  <thead><tr class="text-[var(--arr-text-muted)]"><th class="py-1 pr-2">Tag</th><th class="py-1 pr-2 text-right">Processed</th><th class="py-1 pr-2 text-right">Removed</th><th class="py-1 pr-2 text-right">Blocklisted</th></tr></thead>
+                  <tbody id="alltimeByTagBody"></tbody>
+                </table>
+                <p id="alltimeByTagEmpty" class="text-xs text-[var(--arr-text-muted)] py-2 hidden">No data yet.</p>
+              </div>
+            </div>
+            <div class="blacklist-cat">
+              <h4>Per extension</h4>
+              <div id="alltimeByExt" class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                  <thead><tr class="text-[var(--arr-text-muted)]"><th class="py-1 pr-2">Extension</th><th class="py-1 pr-2 text-right">Processed</th><th class="py-1 pr-2 text-right">Removed</th><th class="py-1 pr-2 text-right">Blocklisted</th></tr></thead>
+                  <tbody id="alltimeByExtBody"></tbody>
+                </table>
+                <p id="alltimeByExtEmpty" class="text-xs text-[var(--arr-text-muted)] py-2 hidden">No data yet.</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" id="previewRunDashboard" class="btn-secondary text-sm">Preview (dry run)</button>
+            <button type="button" id="runNowDashboard" class="btn-primary text-sm">Run now</button>
+          </div>
+        </section>
+
+        <!-- Transmission -->
+        <section id="section-transmission" class="nav-section card p-5 sm:p-6 mb-6">
+          <h2 class="section-title font-semibold text-white">Transmission</h2>
+          <p class="text-sm text-[var(--arr-text-muted)] mb-5">Connect to your Transmission daemon. Only torrents with managed tags are processed.</p>
+          <div class="space-y-4">
+            <label class="toggle-wrap">
+              <input type="checkbox" id="transmission.enabled" class="sr-only peer" />
+              <span class="toggle" data-toggle><span class="toggle-dot"></span></span>
+              <span class="label !mb-0 text-white/90">Enable Transmission</span>
+            </label>
+            <div>
+              <label class="label">Host</label>
+              <input type="text" name="transmission.host" class="input" placeholder="192.168.1.248 or hostname (no http:// or port)" />
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="label">Port</label>
+                <input type="number" name="transmission.port" class="input" placeholder="9091" />
+              </div>
+              <div>
+                <label class="label">RPC Path</label>
+                <input type="text" name="transmission.path" class="input" placeholder="/transmission/rpc" />
+              </div>
+            </div>
+            <label class="toggle-wrap">
+              <input type="checkbox" name="transmission.use_ssl" class="sr-only peer" />
+              <span class="toggle" data-toggle><span class="toggle-dot"></span></span>
+              <span class="label !mb-0 text-white/90">Use SSL</span>
+            </label>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="label">Username</label>
+                <input type="text" name="transmission.username" class="input" placeholder="optional" autocomplete="off" />
+              </div>
+              <div>
+                <label class="label">Password</label>
+                <input type="password" name="transmission.password" class="input" placeholder="optional" autocomplete="off" />
+              </div>
+            </div>
+            <div class="flex items-center gap-3 flex-wrap">
+              <button type="button" class="btn-secondary text-sm" id="testTransmission">Test connection</button>
+              <span id="testTransmissionResult" class="text-sm"></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tags & Blacklist -->
+        <section id="section-tags" class="nav-section card p-5 sm:p-6 mb-6">
+          <h2 class="section-title font-semibold text-white">Tags &amp; Blacklist</h2>
+          <p class="text-sm text-[var(--arr-text-muted)] mb-5">Only torrents with these tags are processed. Files with blacklisted extensions are unticked; if all files are blacklisted, the torrent is removed.</p>
+          <div class="space-y-4">
+            <div>
+              <label class="label">Managed tags (comma-separated)</label>
+              <input type="text" name="managed_tags" class="input" placeholder="e.g. sonarr, radarr, tv-sonarr" />
+              <p class="text-xs text-[var(--arr-text-muted)] mt-1">Use the exact tag names shown in your download client. Substring match: &quot;sonarr&quot; also matches &quot;tv-sonarr&quot;.</p>
+            </div>
+            <div>
+              <label class="label">Blacklisted extensions</label>
+              <p class="text-xs text-[var(--arr-text-muted)] mb-3">Files with these extensions are unticked. Pick by category or add your own.</p>
+              <div id="blacklistCategories" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <!-- Filled by JS from BLACKLIST_CATEGORIES -->
+              </div>
+              <div class="flex flex-wrap gap-2 items-center">
+                <input type="text" id="blacklistCustomInput" class="input w-32" placeholder="e.g. mkv" maxlength="20" />
+                <button type="button" id="blacklistCustomAdd" class="btn-secondary text-sm">Add custom</button>
+              </div>
+              <div id="blacklistCustomList" class="flex flex-wrap gap-2 mt-2 min-h-[2rem]"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- When all files unwanted -->
+        <section id="section-when-unwanted" class="nav-section card p-5 sm:p-6 mb-6">
+          <h2 class="section-title font-semibold text-white">When all files are unwanted</h2>
+          <p class="text-sm text-[var(--arr-text-muted)] mb-5">Action after removing the torrent from the download client (same options as Sonarr/Radarr remove dialog).</p>
+          <div class="space-y-4">
+            <div>
+              <label class="label">Action</label>
+              <select name="on_remove_all_unwanted" class="input-select">
+                <option value="remove_only">Remove from download client only</option>
+                <option value="blocklist_only">Blocklist only (no search)</option>
+                <option value="blocklist_and_search">Blocklist and search for replacement</option>
+              </select>
+              <p class="text-xs text-[var(--arr-text-muted)] mt-2">Blocklist and search = blocklist in Sonarr/Radarr then trigger a new search for that episode/movie.</p>
+            </div>
+            <label class="toggle-wrap">
+              <input type="checkbox" name="remove_delete_data" id="remove_delete_data" class="sr-only peer" />
+              <span class="toggle" data-toggle><span class="toggle-dot"></span></span>
+              <span class="label !mb-0 text-white/90">Keep files on disk when removing</span>
+            </label>
+            <p class="text-xs text-[var(--arr-text-muted)]">When enabled, torrents are removed from Transmission but data is not deleted. When disabled, data is deleted (Transmission &quot;delete data&quot;).</p>
+            <div class="whitelist-box">
+              <span class="text-xs font-semibold text-[#7ee787] uppercase tracking-wide">Whitelist</span>
+              <label class="label mt-2">Whitelisted extensions (optional)</label>
+              <input type="text" name="whitelisted_extensions" class="input" placeholder="e.g. mkv, mp4, m4v (comma-separated)" />
+              <p class="text-xs text-[var(--arr-text-muted)] mt-2">If set, a torrent is <strong>only removed when it has at least one file</strong> with one of these extensions. Leave empty to allow removal of any torrent.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sonarr -->
+        <section id="section-sonarr" class="nav-section card p-5 sm:p-6 mb-6">
+          <h2 class="section-title font-semibold text-white">Sonarr</h2>
+          <p class="text-sm text-[var(--arr-text-muted)] mb-5">Used for blocklist and optional search when a torrent is removed (by tag).</p>
+          <div class="space-y-4">
+            <label class="toggle-wrap">
+              <input type="checkbox" id="sonarr.enabled" class="sr-only peer" />
+              <span class="toggle" data-toggle><span class="toggle-dot"></span></span>
+              <span class="label !mb-0 text-white/90">Enable Sonarr</span>
+            </label>
+            <div>
+              <label class="label">Base URL</label>
+              <input type="url" name="sonarr.base_url" class="input" placeholder="http://localhost:8989" />
+            </div>
+            <div>
+              <label class="label">API Key</label>
+              <input type="password" name="sonarr.api_key" class="input" placeholder="Settings → General → Security" autocomplete="off" />
+            </div>
+            <div class="flex items-center gap-3 flex-wrap">
+              <button type="button" class="btn-secondary text-sm" id="testSonarr">Test connection</button>
+              <span id="testSonarrResult" class="text-sm"></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Radarr -->
+        <section id="section-radarr" class="nav-section card p-5 sm:p-6 mb-6">
+          <h2 class="section-title font-semibold text-white">Radarr</h2>
+          <p class="text-sm text-[var(--arr-text-muted)] mb-5">Used for blocklist and optional search when a torrent is removed (by tag).</p>
+          <div class="space-y-4">
+            <label class="toggle-wrap">
+              <input type="checkbox" id="radarr.enabled" class="sr-only peer" />
+              <span class="toggle" data-toggle><span class="toggle-dot"></span></span>
+              <span class="label !mb-0 text-white/90">Enable Radarr</span>
+            </label>
+            <div>
+              <label class="label">Base URL</label>
+              <input type="url" name="radarr.base_url" class="input" placeholder="http://localhost:7878" />
+            </div>
+            <div>
+              <label class="label">API Key</label>
+              <input type="password" name="radarr.api_key" class="input" placeholder="Settings → General → Security" autocomplete="off" />
+            </div>
+            <div class="flex items-center gap-3 flex-wrap">
+              <button type="button" class="btn-secondary text-sm" id="testRadarr">Test connection</button>
+              <span id="testRadarrResult" class="text-sm"></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Pushover -->
+        <section id="section-pushover" class="nav-section card p-5 sm:p-6 mb-6">
+          <h2 class="section-title font-semibold text-white">Pushover</h2>
+          <p class="text-sm text-[var(--arr-text-muted)] mb-5">Choose which events to get notified about.</p>
+          <div class="space-y-4">
+            <label class="toggle-wrap">
+              <input type="checkbox" id="pushover.enabled" class="sr-only peer" />
+              <span class="toggle" data-toggle><span class="toggle-dot"></span></span>
+              <span class="label !mb-0 text-white/90">Enable notifications</span>
+            </label>
+            <div class="pl-0">
+              <p class="label text-white/80 mb-2">Notify when</p>
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="pushover.notify_on_remove" class="rounded border-gray-500 bg-[var(--arr-input-bg)]" />
+                  <span class="text-sm text-white/90">A torrent is removed (all files unwanted)</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="pushover.notify_on_run_complete" class="rounded border-gray-500 bg-[var(--arr-input-bg)]" />
+                  <span class="text-sm text-white/90">A run completes successfully (summary)</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="pushover.notify_on_error" class="rounded border-gray-500 bg-[var(--arr-input-bg)]" />
+                  <span class="text-sm text-white/90">A run fails (error)</span>
+                </label>
+              </div>
+            </div>
+            <div>
+              <label class="label">Or paste Pushover URL</label>
+              <input type="text" id="pushoverUrl" class="input" placeholder="pushover://userkey@apitoken" autocomplete="off" />
+              <p class="text-xs text-[var(--arr-text-muted)] mt-1">Paste <code class="bg-[var(--arr-input-bg)] px-1 rounded">pushover://userkey@apitoken</code> to fill User Key and API Token.</p>
+            </div>
+            <div>
+              <label class="label">User Key</label>
+              <input type="text" name="pushover.user_key" class="input" placeholder="Your user key" autocomplete="off" />
+            </div>
+            <div>
+              <label class="label">API Token</label>
+              <input type="text" name="pushover.api_token" class="input" placeholder="Application token" autocomplete="off" />
+            </div>
+            <div class="flex items-center gap-3 flex-wrap">
+              <button type="button" class="btn-secondary text-sm" id="testPushover">Test connection</button>
+              <span id="testPushoverResult" class="text-sm"></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Schedule -->
+        <section id="section-schedule" class="nav-section card p-5 sm:p-6 mb-6">
+          <h2 class="section-title font-semibold text-white">Schedule &amp; safety</h2>
+          <p class="text-sm text-[var(--arr-text-muted)] mb-5">How often to run the cleaner. Pause the scheduler or set a cooldown to avoid running too often.</p>
+          <div class="space-y-4">
+            <label class="toggle-wrap">
+              <input type="checkbox" id="scheduler_paused" name="scheduler_paused" class="sr-only peer" />
+              <span class="toggle" data-toggle><span class="toggle-dot"></span></span>
+              <span class="label !mb-0 text-white/90">Pause scheduler</span>
+            </label>
+            <p class="text-xs text-[var(--arr-text-muted)]">When paused, scheduled runs are skipped. Run now still works.</p>
+            <div>
+              <label class="label">Run cooldown (seconds)</label>
+              <input type="number" name="run_cooldown_seconds" id="run_cooldown_seconds" class="input w-32" min="0" placeholder="0" />
+              <p class="text-xs text-[var(--arr-text-muted)] mt-1">Minimum seconds between &quot;Run now&quot; runs. 0 = no cooldown.</p>
+            </div>
+            <div>
+              <label class="label">Run every</label>
+              <select id="schedulePreset" class="input-select" name="schedule_preset">
+                <option value="0">Manual only (Run now)</option>
+                <option value="300">Every 5 minutes</option>
+                <option value="900">Every 15 minutes</option>
+                <option value="1800">Every 30 minutes</option>
+                <option value="3600">Every hour</option>
+                <option value="custom">Custom (seconds)</option>
+              </select>
+            </div>
+            <div id="customIntervalWrap" class="hidden">
+              <label class="label">Custom interval (seconds)</label>
+              <input type="number" name="run_interval_seconds" id="run_interval_seconds" class="input" min="0" placeholder="e.g. 600" />
+            </div>
+          </div>
+        </section>
+
+        <div class="mb-6">
+          <button type="submit" class="btn-primary w-full sm:w-auto min-w-[140px]">Save settings</button>
+        </div>
+
+        <!-- Backup -->
+        <section id="section-backup" class="nav-section card p-6 mb-6">
+          <h2 class="text-xl font-semibold text-white mb-1">Backup &amp; restore</h2>
+          <p class="text-sm text-[var(--arr-text-muted)] mb-5">Export settings as JSON or import from a previous export.</p>
+          <div class="flex flex-wrap gap-3">
+            <button type="button" id="exportSettings" class="btn-secondary text-sm">Export settings</button>
+            <label class="btn-secondary text-sm cursor-pointer inline-block mb-0">
+              Import settings
+              <input type="file" id="importSettingsFile" accept=".json,application/json" class="sr-only" />
+            </label>
+          </div>
+        </section>
+      </form>
+
+      <!-- Logs -->
+      <section id="section-logs" class="nav-section card p-5 sm:p-6 mb-6">
+        <h2 class="section-title font-semibold text-white">Logs</h2>
+        <p class="text-sm text-[var(--arr-text-muted)] mb-5">Last run and recent run history. Scheduled runs and Run now are logged here.</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <a href="" id="downloadLogsTxt" class="btn-secondary text-sm">Download logs (TXT)</a>
+          <a href="" id="downloadLogsCsv" class="btn-secondary text-sm">Download logs (CSV)</a>
+        </div>
+        <div id="lastRunCard" class="log-card mb-5">
+          <div class="log-meta">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span id="lastRunStatus" class="log-badge">—</span>
+              <span id="lastRunAt" class="text-xs text-[var(--arr-text-muted)]"></span>
+              <span id="lastRunCounts" class="text-xs text-[var(--arr-text-muted)]"></span>
+            </div>
+            <button type="button" id="copyLastLog" class="btn-secondary text-xs py-1.5 px-2" title="Copy log">Copy</button>
+          </div>
+          <div id="lastRunLog" class="log-body">No run yet.</div>
+        </div>
+        <h3 class="text-sm font-medium text-white mb-2">Recent runs</h3>
+        <div id="runHistory" class="space-y-2 max-h-[24rem] overflow-y-auto">
+          <p class="text-sm text-[var(--arr-text-muted)]">No runs yet.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const API = '';
+    const form = document.getElementById('form');
+    const runNowBtn = document.getElementById('runNow');
+    const lastRunStatus = document.getElementById('lastRunStatus');
+    const lastRunAt = document.getElementById('lastRunAt');
+    const lastRunLog = document.getElementById('lastRunLog');
+    const runHistoryEl = document.getElementById('runHistory');
+    const schedulePreset = document.getElementById('schedulePreset');
+    const customIntervalWrap = document.getElementById('customIntervalWrap');
+    const runIntervalSecondsInput = document.getElementById('run_interval_seconds');
+
+    const PRESETS = { 0: '0', 300: '300', 900: '900', 1800: '1800', 3600: '3600' };
+
+    const BLACKLIST_CATEGORIES = [
+      { title: 'Executables', exts: ['exe', 'bat', 'cmd', 'com', 'msi', 'dll'] },
+      { title: 'Images', exts: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'ico', 'svg'] },
+      { title: 'Documents', exts: ['nfo', 'txt', 'url', 'html', 'htm', 'pdf', 'doc', 'docx'] },
+      { title: 'Scene / release', exts: ['sfv', 'srr', 'sample', 'thumbs', 'db'] }
+    ];
+    const ALL_PRESET_EXTS = BLACKLIST_CATEGORIES.flatMap(c => c.exts);
+
+    function renderBlacklistCategories() {
+      const el = document.getElementById('blacklistCategories');
+      if (!el) return;
+      el.innerHTML = BLACKLIST_CATEGORIES.map(cat =>
+        '<div class="blacklist-cat">' +
+          '<h4>' + cat.title + '</h4>' +
+          '<div class="blacklist-chks">' +
+            cat.exts.map(ext =>
+              '<label><input type="checkbox" name="blacklist_ext" value="' + ext + '">' + ext + '</label>'
+            ).join('') +
+          '</div></div>'
+      ).join('');
+    }
+
+    function getBlacklistFromForm() {
+      const checked = Array.from(form.querySelectorAll('input[name="blacklist_ext"]:checked')).map(c => c.value.toLowerCase());
+      const custom = Array.from(document.querySelectorAll('#blacklistCustomList [data-ext]')).map(n => n.getAttribute('data-ext').toLowerCase());
+      return [...new Set([...checked, ...custom])];
+    }
+
+    function setBlacklistInForm(arr) {
+      const list = (arr || []).map(s => (s || '').trim().replace(/^\./, '').toLowerCase()).filter(Boolean);
+      form.querySelectorAll('input[name="blacklist_ext"]').forEach(cb => {
+        cb.checked = list.includes(cb.value.toLowerCase());
+      });
+      const custom = list.filter(ext => !ALL_PRESET_EXTS.includes(ext));
+      const listEl = document.getElementById('blacklistCustomList');
+      if (!listEl) return;
+      listEl.innerHTML = custom.map(ext =>
+        '<span class="blacklist-tag" data-ext="' + ext + '">' + ext +
+        '<button type="button" aria-label="Remove">×</button></span>'
+      ).join('');
+      listEl.querySelectorAll('.blacklist-tag button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.closest('.blacklist-tag').remove();
+        });
+      });
+    }
+
+    function updateScheduleUI() {
+      customIntervalWrap.classList.toggle('hidden', schedulePreset.value !== 'custom');
+    }
+
+    const VALID_SECTIONS = ['dashboard', 'transmission', 'tags', 'when-unwanted', 'sonarr', 'radarr', 'pushover', 'schedule', 'logs', 'backup'];
+
+    function setActiveNav(sectionId) {
+      const id = VALID_SECTIONS.includes(sectionId) ? sectionId : 'transmission';
+      document.querySelectorAll('.nav-link').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('data-section') === id);
+      });
+      document.querySelectorAll('.nav-section').forEach(s => {
+        s.classList.toggle('active', s.id === 'section-' + id);
+      });
+      const newHash = '#' + id;
+      if (window.location.hash !== newHash) {
+        history.replaceState(null, '', window.location.pathname + window.location.search + newHash);
+      }
+    }
+
+    function sectionFromHash() {
+      const hash = (window.location.hash || '').replace(/^#/, '').trim().toLowerCase();
+      return VALID_SECTIONS.includes(hash) ? hash : 'dashboard';
+    }
+
+    function closeSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      if (sidebar) sidebar.classList.remove('open');
+      if (overlay) { overlay.classList.remove('open'); overlay.setAttribute('aria-hidden', 'true'); }
+      document.body.style.overflow = '';
+    }
+    function openSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      if (sidebar) sidebar.classList.add('open');
+      if (overlay) { overlay.classList.add('open'); overlay.setAttribute('aria-hidden', 'false'); }
+      document.body.style.overflow = 'hidden';
+    }
+    document.getElementById('menuBtn')?.addEventListener('click', () => {
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar?.classList.contains('open')) closeSidebar();
+      else openSidebar();
+    });
+    document.getElementById('sidebarOverlay')?.addEventListener('click', closeSidebar);
+
+    document.querySelectorAll('.nav-link').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const sectionId = a.getAttribute('data-section');
+        setActiveNav(sectionId);
+        history.pushState(null, '', '#' + sectionId);
+        if (window.innerWidth < 768) closeSidebar();
+      });
+    });
+
+    window.addEventListener('hashchange', () => setActiveNav(sectionFromHash()));
+    window.addEventListener('resize', () => { if (window.innerWidth >= 768) closeSidebar(); });
+
+    /** Sync the visible toggle state (e.g. after loading settings) without adding listeners. */
+    function syncTogglesVisual() {
+      document.querySelectorAll('[data-toggle]').forEach(el => {
+        const wrap = el.closest('label');
+        const input = wrap?.querySelector('input[type="checkbox"]');
+        if (input) el.classList.toggle('checked', input.checked);
+      });
+    }
+
+    function bindToggles() {
+      document.querySelectorAll('[data-toggle]').forEach(el => {
+        const wrap = el.closest('label');
+        if (!wrap) return;
+        const input = wrap.querySelector('input[type="checkbox"]');
+        if (!input) return;
+        function sync() {
+          el.classList.toggle('checked', input.checked);
+        }
+        sync();
+        wrap.addEventListener('click', (e) => {
+          if (e.target === input) return;
+          input.checked = !input.checked;
+          sync();
+        });
+      });
+    }
+
+    function payloadFromForm() {
+      const o = {
+        transmission: { enabled: true, host: '', port: 9091, path: '/transmission/rpc', use_ssl: false, username: null, password: null },
+        sonarr: { enabled: false, base_url: 'http://localhost:8989', api_key: '' },
+        radarr: { enabled: false, base_url: 'http://localhost:7878', api_key: '' },
+        pushover: { enabled: false, user_key: '', api_token: '', notify_on_remove: true, notify_on_run_complete: false, notify_on_error: true },
+        managed_tags: [],
+        blacklisted_extensions: [],
+        run_interval_seconds: 300,
+        on_remove_all_unwanted: 'blocklist_only',
+        scheduler_paused: false,
+        run_cooldown_seconds: 0,
+        remove_delete_data: true,
+        whitelisted_extensions: []
+      };
+      const onRemove = form.querySelector('[name="on_remove_all_unwanted"]')?.value || 'blocklist_only';
+      o.on_remove_all_unwanted = onRemove === 'remove_only' ? 'remove_only' : onRemove === 'blocklist_and_search' ? 'blocklist_and_search' : 'blocklist_only';
+      const tagStr = form.querySelector('[name="managed_tags"]')?.value || '';
+      o.managed_tags = tagStr.split(',').map(s => s.trim()).filter(Boolean);
+      o.blacklisted_extensions = getBlacklistFromForm();
+      if (schedulePreset.value === 'custom') {
+        o.run_interval_seconds = parseInt(runIntervalSecondsInput?.value || '0', 10) || 0;
+      } else {
+        o.run_interval_seconds = parseInt(schedulePreset.value || '0', 10) || 0;
+      }
+      o.scheduler_paused = form.querySelector('#scheduler_paused')?.checked ?? false;
+      o.run_cooldown_seconds = parseInt(form.querySelector('[name="run_cooldown_seconds"]')?.value || '0', 10) || 0;
+      o.remove_delete_data = form.querySelector('#remove_delete_data')?.checked ?? true;
+      const whitelistStr = form.querySelector('[name="whitelisted_extensions"]')?.value || '';
+      o.whitelisted_extensions = whitelistStr.split(',').map(s => s.trim().replace(/^\./, '').toLowerCase()).filter(Boolean);
+      o.transmission.enabled = form.querySelector('#transmission\\.enabled')?.checked ?? true;
+      o.transmission.host = form.querySelector('[name="transmission.host"]')?.value || 'localhost';
+      o.transmission.port = parseInt(form.querySelector('[name="transmission.port"]')?.value || '9091', 10) || 9091;
+      o.transmission.path = form.querySelector('[name="transmission.path"]')?.value || '/transmission/rpc';
+      o.transmission.use_ssl = form.querySelector('[name="transmission.use_ssl"]')?.checked ?? false;
+      o.transmission.username = form.querySelector('[name="transmission.username"]')?.value || null;
+      o.transmission.password = form.querySelector('[name="transmission.password"]')?.value || null;
+      o.sonarr.enabled = form.querySelector('#sonarr\\.enabled')?.checked ?? false;
+      o.sonarr.base_url = form.querySelector('[name="sonarr.base_url"]')?.value || 'http://localhost:8989';
+      o.sonarr.api_key = form.querySelector('[name="sonarr.api_key"]')?.value || '';
+      o.radarr.enabled = form.querySelector('#radarr\\.enabled')?.checked ?? false;
+      o.radarr.base_url = form.querySelector('[name="radarr.base_url"]')?.value || 'http://localhost:7878';
+      o.radarr.api_key = form.querySelector('[name="radarr.api_key"]')?.value || '';
+      o.pushover.enabled = form.querySelector('#pushover\\.enabled')?.checked ?? false;
+      o.pushover.user_key = form.querySelector('[name="pushover.user_key"]')?.value || '';
+      o.pushover.api_token = form.querySelector('[name="pushover.api_token"]')?.value || '';
+      o.pushover.notify_on_remove = form.querySelector('[name="pushover.notify_on_remove"]')?.checked ?? true;
+      o.pushover.notify_on_run_complete = form.querySelector('[name="pushover.notify_on_run_complete"]')?.checked ?? false;
+      o.pushover.notify_on_error = form.querySelector('[name="pushover.notify_on_error"]')?.checked ?? true;
+      return o;
+    }
+
+    function formFromSettings(s) {
+      if (!s) return;
+      const t = s.transmission || {};
+      form.querySelector('#transmission\\.enabled').checked = t.enabled !== false;
+      form.querySelector('[name="transmission.host"]').value = t.host || '';
+      form.querySelector('[name="transmission.port"]').value = t.port ?? 9091;
+      form.querySelector('[name="transmission.path"]').value = t.path || '/transmission/rpc';
+      form.querySelector('[name="transmission.use_ssl"]').checked = t.use_ssl === true;
+      form.querySelector('[name="transmission.username"]').value = t.username || '';
+      form.querySelector('[name="transmission.password"]').value = t.password || '';
+      form.querySelector('[name="managed_tags"]').value = (s.managed_tags || []).join(', ');
+      setBlacklistInForm(s.blacklisted_extensions || []);
+      const interval = s.run_interval_seconds ?? 0;
+      if (PRESETS[interval] !== undefined) {
+        schedulePreset.value = String(interval);
+        runIntervalSecondsInput.value = interval;
+      } else {
+        schedulePreset.value = 'custom';
+        runIntervalSecondsInput.value = interval || '';
+      }
+      updateScheduleUI();
+      const sel = form.querySelector('[name="on_remove_all_unwanted"]');
+      if (sel) sel.value = (s.on_remove_all_unwanted === 'remove_only' || s.on_remove_all_unwanted === 'blocklist_and_search') ? s.on_remove_all_unwanted : 'blocklist_only';
+      const pauseEl = form.querySelector('#scheduler_paused');
+      if (pauseEl) pauseEl.checked = s.scheduler_paused === true;
+      const cooldownEl = form.querySelector('[name="run_cooldown_seconds"]');
+      if (cooldownEl) cooldownEl.value = (s.run_cooldown_seconds ?? 0) || '';
+      const keepFilesEl = form.querySelector('#remove_delete_data');
+      if (keepFilesEl) keepFilesEl.checked = s.remove_delete_data !== false;
+      const whitelistEl = form.querySelector('[name="whitelisted_extensions"]');
+      if (whitelistEl) whitelistEl.value = (s.whitelisted_extensions || []).join(', ');
+      const so = s.sonarr || {};
+      form.querySelector('#sonarr\\.enabled').checked = so.enabled === true;
+      form.querySelector('[name="sonarr.base_url"]').value = so.base_url || 'http://localhost:8989';
+      form.querySelector('[name="sonarr.api_key"]').value = so.api_key || '';
+      const r = s.radarr || {};
+      form.querySelector('#radarr\\.enabled').checked = r.enabled === true;
+      form.querySelector('[name="radarr.base_url"]').value = r.base_url || 'http://localhost:7878';
+      form.querySelector('[name="radarr.api_key"]').value = r.api_key || '';
+      const p = s.pushover || {};
+      form.querySelector('#pushover\\.enabled').checked = p.enabled === true;
+      form.querySelector('[name="pushover.user_key"]').value = p.user_key || '';
+      form.querySelector('[name="pushover.api_token"]').value = p.api_token || '';
+      form.querySelector('[name="pushover.notify_on_remove"]').checked = p.notify_on_remove !== false;
+      form.querySelector('[name="pushover.notify_on_run_complete"]').checked = p.notify_on_run_complete === true;
+      form.querySelector('[name="pushover.notify_on_error"]').checked = p.notify_on_error !== false;
+      const urlEl = document.getElementById('pushoverUrl');
+      if (urlEl) urlEl.value = '';
+      syncTogglesVisual();
+    }
+
+    function formatLogTime(iso) {
+      if (!iso) return '';
+      try {
+        const d = new Date(iso);
+        return d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+      } catch (_) { return iso; }
+    }
+
+    function setLastRun(ok, log, at, processed, removed) {
+      const card = document.getElementById('lastRunCard');
+      if (card) {
+        card.classList.remove('success', 'error');
+        if (ok === true) card.classList.add('success');
+        else if (ok === false) card.classList.add('error');
+      }
+      const statusEl = document.getElementById('lastRunStatus');
+      if (statusEl) {
+        statusEl.textContent = ok === true ? 'Success' : ok === false ? 'Error' : '—';
+        statusEl.className = 'log-badge ' + (ok === true ? 'ok' : ok === false ? 'err' : '');
+      }
+      const atEl = document.getElementById('lastRunAt');
+      if (atEl) atEl.textContent = formatLogTime(at) || '';
+      const countsEl = document.getElementById('lastRunCounts');
+      if (countsEl) {
+        if (processed != null || removed != null) {
+          countsEl.textContent = 'Processed: ' + (processed ?? '—') + '  Removed: ' + (removed ?? '—');
+        } else {
+          countsEl.textContent = '';
+        }
+      }
+      if (lastRunLog) lastRunLog.textContent = log || 'No run yet.';
+    }
+
+    function updateDashboard(s) {
+      const lastEl = document.getElementById('dashboardLastRun');
+      const procRemEl = document.getElementById('dashboardProcessedRemoved');
+      const schedEl = document.getElementById('dashboardScheduler');
+      const pausedEl = document.getElementById('dashboardPausedBadge');
+      if (lastEl) {
+        if (s.last_run_at) {
+          lastEl.textContent = (s.last_run_ok === true ? 'Success' : s.last_run_ok === false ? 'Error' : '—') + ' at ' + formatLogTime(s.last_run_at);
+        } else {
+          lastEl.textContent = 'No run yet';
+        }
+      }
+      if (procRemEl && (s.last_run_processed != null || s.last_run_removed != null)) {
+        procRemEl.textContent = 'Processed: ' + (s.last_run_processed ?? '—') + ', Removed: ' + (s.last_run_removed ?? '—');
+      } else if (procRemEl) procRemEl.textContent = '';
+      if (schedEl) {
+        const interval = s.run_interval_seconds ?? 0;
+        const paused = s.scheduler_paused === true;
+        if (paused) {
+          schedEl.textContent = 'Paused';
+          if (pausedEl) { pausedEl.classList.remove('hidden'); }
+        } else {
+          if (pausedEl) pausedEl.classList.add('hidden');
+          schedEl.textContent = interval <= 0 ? 'Manual only' : 'Every ' + (interval >= 60 ? (interval / 60) + ' min' : interval + ' s');
+        }
+      }
+      if (s.alltime_stats) renderAlltimeStats(s.alltime_stats);
+    }
+
+    function renderAlltimeStats(stats) {
+      if (!stats) return;
+      const p = stats.processed ?? 0;
+      const r = stats.removed ?? 0;
+      const b = stats.blocklisted ?? 0;
+      const processedEl = document.getElementById('alltimeProcessed');
+      const removedEl = document.getElementById('alltimeRemoved');
+      const blocklistedEl = document.getElementById('alltimeBlocklisted');
+      if (processedEl) processedEl.textContent = p;
+      if (removedEl) removedEl.textContent = r;
+      if (blocklistedEl) blocklistedEl.textContent = b;
+      const byTag = stats.by_tag || {};
+      const tagBody = document.getElementById('alltimeByTagBody');
+      const tagEmpty = document.getElementById('alltimeByTagEmpty');
+      if (tagBody && tagEmpty) {
+        const tags = Object.keys(byTag).sort();
+        if (tags.length === 0) {
+          tagBody.innerHTML = '';
+          tagEmpty.classList.remove('hidden');
+        } else {
+          tagEmpty.classList.add('hidden');
+          tagBody.innerHTML = tags.map(tag => {
+            const c = byTag[tag];
+            return '<tr><td class="py-1 pr-2">' + escapeHtml(tag) + '</td><td class="py-1 pr-2 text-right">' + (c.processed ?? 0) + '</td><td class="py-1 pr-2 text-right">' + (c.removed ?? 0) + '</td><td class="py-1 pr-2 text-right">' + (c.blocklisted ?? 0) + '</td></tr>';
+          }).join('');
+        }
+      }
+      const byExt = stats.by_extension || {};
+      const extBody = document.getElementById('alltimeByExtBody');
+      const extEmpty = document.getElementById('alltimeByExtEmpty');
+      if (extBody && extEmpty) {
+        const exts = Object.keys(byExt).sort();
+        if (exts.length === 0) {
+          extBody.innerHTML = '';
+          extEmpty.classList.remove('hidden');
+        } else {
+          extEmpty.classList.add('hidden');
+          extBody.innerHTML = exts.map(ext => {
+            const c = byExt[ext];
+            return '<tr><td class="py-1 pr-2">.' + escapeHtml(ext) + '</td><td class="py-1 pr-2 text-right">' + (c.processed ?? 0) + '</td><td class="py-1 pr-2 text-right">' + (c.removed ?? 0) + '</td><td class="py-1 pr-2 text-right">' + (c.blocklisted ?? 0) + '</td></tr>';
+          }).join('');
+        }
+      }
+    }
+
+    function escapeHtml(s) {
+      const div = document.createElement('div');
+      div.textContent = s;
+      return div.innerHTML;
+    }
+
+    function renderRunHistory(history) {
+      if (!history || history.length === 0) {
+        runHistoryEl.innerHTML = '<p class="text-sm text-[var(--arr-text-muted)]">No runs yet.</p>';
+        return;
+      }
+      runHistoryEl.innerHTML = history.map((run, i) => {
+        const ok = run.ok === true;
+        const at = run.at || '';
+        const atFormatted = formatLogTime(at);
+        const log = (run.log || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const id = 'log-' + i;
+        return '<div class="log-card ' + (ok ? 'success' : 'error') + '">' +
+          '<div class="log-meta cursor-pointer" data-toggle-run="' + id + '">' +
+            '<div class="flex items-center gap-2 flex-wrap">' +
+              '<span class="log-badge ' + (ok ? 'ok' : 'err') + '">' + (ok ? 'OK' : 'Error') + '</span>' +
+              '<span class="text-xs text-[var(--arr-text-muted)]">' + atFormatted + '</span>' +
+            '</div>' +
+            '<div class="flex items-center gap-2">' +
+              '<button type="button" class="btn-secondary text-xs py-1.5 px-2 copy-log-btn" data-log-id="' + id + '" title="Copy log">Copy</button>' +
+              '<span class="text-[var(--arr-text-muted)] text-xs">Click to expand</span>' +
+            '</div>' +
+          '</div>' +
+          '<pre id="' + id + '" class="log-body hidden border-t border-[var(--arr-card-border)]">' + log + '</pre>' +
+          '</div>';
+      }).join('');
+      runHistoryEl.querySelectorAll('[data-toggle-run]').forEach(el => {
+        const runId = el.getAttribute('data-toggle-run');
+        el.addEventListener('click', (e) => {
+          if (e.target.classList.contains('copy-log-btn')) return;
+          const pre = document.getElementById(runId);
+          if (pre) pre.classList.toggle('hidden');
+        });
+      });
+      runHistoryEl.querySelectorAll('.copy-log-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const pre = document.getElementById(btn.getAttribute('data-log-id'));
+          if (pre && navigator.clipboard) navigator.clipboard.writeText(pre.textContent);
+        });
+      });
+    }
+
+    async function load() {
+      try {
+        const r = await fetch(API + '/api/settings');
+        const s = await r.json();
+        formFromSettings(s);
+        setLastRun(s.last_run_ok, s.last_run_log, s.last_run_at || null, s.last_run_processed, s.last_run_removed);
+        updateDashboard(s);
+        renderRunHistory(s.run_history || []);
+      } catch (e) {
+        lastRunLog.textContent = 'Failed to load: ' + e.message;
+      }
+    }
+
+    function showToast(message, isError) {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      toast.textContent = message;
+      toast.style.color = isError ? '#f85149' : 'var(--arr-text)';
+      toast.classList.add('show');
+      clearTimeout(toast._hide);
+      toast._hide = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = payloadFromForm();
+      try {
+        const r = await fetch(API + '/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!r.ok) throw new Error(await r.text());
+        lastRunStatus.textContent = 'Settings saved';
+        lastRunStatus.style.color = '#3fb950';
+        showToast('Settings saved', false);
+      } catch (err) {
+        lastRunStatus.textContent = 'Save failed: ' + err.message;
+        lastRunStatus.style.color = '#f85149';
+        showToast('Save failed: ' + err.message, true);
+      }
+    });
+
+    async function doRunNow(btn) {
+      if (btn) btn.disabled = true;
+      lastRunStatus.textContent = 'Running…';
+      lastRunStatus.style.color = 'var(--arr-text-muted)';
+      lastRunAt.textContent = '';
+      const countsEl = document.getElementById('lastRunCounts');
+      if (countsEl) countsEl.textContent = '';
+      try {
+        const r = await fetch(API + '/api/run', { method: 'POST' });
+        if (r.status === 429) {
+          const err = await r.json().catch(() => ({}));
+          setLastRun(false, err.detail || 'Run cooldown active. Wait before running again.');
+          return;
+        }
+        const data = await r.json();
+        setLastRun(data.ok, data.log, data.at || null, data.processed, data.removed);
+        const dashLast = document.getElementById('dashboardLastRun');
+        const dashProc = document.getElementById('dashboardProcessedRemoved');
+        if (dashLast) dashLast.textContent = (data.ok ? 'Success' : 'Error') + (data.at ? ' at ' + formatLogTime(data.at) : '');
+        if (dashProc && (data.processed != null || data.removed != null)) dashProc.textContent = 'Processed: ' + (data.processed ?? '—') + ', Removed: ' + (data.removed ?? '—');
+        const logRes = await fetch(API + '/api/logs');
+        const logData = await logRes.json();
+        renderRunHistory(logData.run_history || []);
+        try {
+          const statsRes = await fetch(API + '/api/stats');
+          if (statsRes.ok) renderAlltimeStats(await statsRes.json());
+        } catch (_) {}
+      } catch (e) {
+        setLastRun(false, e.message);
+      }
+      if (btn) btn.disabled = false;
+    }
+
+    runNowBtn.addEventListener('click', () => doRunNow(runNowBtn));
+    document.getElementById('runNowDashboard')?.addEventListener('click', () => doRunNow(document.getElementById('runNowDashboard')));
+
+    async function doPreview(btn) {
+      if (btn) btn.disabled = true;
+      lastRunStatus.textContent = 'Preview…';
+      lastRunStatus.style.color = 'var(--arr-text-muted)';
+      try {
+        const r = await fetch(API + '/api/preview', { method: 'POST' });
+        const data = await r.json();
+        setLastRun(data.ok, data.log, null, data.processed, data.removed);
+        lastRunStatus.textContent = 'Preview (dry run)';
+        lastRunAt.textContent = 'No changes made';
+      } catch (e) {
+        setLastRun(false, 'Preview failed: ' + e.message);
+      }
+      if (btn) btn.disabled = false;
+    }
+    document.getElementById('previewRun')?.addEventListener('click', () => doPreview(document.getElementById('previewRun')));
+    document.getElementById('previewRunDashboard')?.addEventListener('click', () => doPreview(document.getElementById('previewRunDashboard')));
+
+    function showTestResult(el, ok, message) {
+      if (!el) return;
+      el.textContent = ok ? '\u2713 ' + message : '\u2717 ' + message;
+      el.style.color = ok ? '#3fb950' : '#f85149';
+    }
+
+    async function runTest(service, resultId) {
+      const el = document.getElementById(resultId);
+      if (el) el.textContent = 'Testing…';
+      el.style.color = 'var(--arr-text-muted)';
+      try {
+        const r = await fetch(API + '/api/test?service=' + encodeURIComponent(service));
+        const data = await r.json();
+        const res = data[service];
+        if (res) showTestResult(el, res.ok, res.message);
+        else if (el) el.textContent = 'No result';
+      } catch (e) {
+        if (el) { el.textContent = '\u2717 ' + e.message; el.style.color = '#f85149'; }
+      }
+    }
+
+    // Parse pushover://userkey@apitoken (or pover://) from URL field into User Key and API Token
+    (function () {
+      const urlEl = document.getElementById('pushoverUrl');
+      const userKeyEl = form.querySelector('[name="pushover.user_key"]');
+      const apiTokenEl = form.querySelector('[name="pushover.api_token"]');
+      if (!urlEl || !userKeyEl || !apiTokenEl) return;
+      const pushoverUrlRegex = /^(?:pushover|pover):\/\/([^@]+)@(.+)$/;
+      function tryParse() {
+        const raw = (urlEl.value || '').trim();
+        const m = raw.match(pushoverUrlRegex);
+        if (m) {
+          const userKey = m[1].trim();
+          const apiToken = m[2].trim();
+          if (userKey && apiToken) {
+            userKeyEl.value = userKey;
+            apiTokenEl.value = apiToken;
+            urlEl.value = '';
+          }
+        }
+      }
+      urlEl.addEventListener('input', tryParse);
+      urlEl.addEventListener('blur', tryParse);
+    })();
+
+    document.getElementById('testTransmission').addEventListener('click', () => runTest('transmission', 'testTransmissionResult'));
+    document.getElementById('testSonarr').addEventListener('click', () => runTest('sonarr', 'testSonarrResult'));
+    document.getElementById('testRadarr').addEventListener('click', () => runTest('radarr', 'testRadarrResult'));
+    document.getElementById('testPushover').addEventListener('click', () => runTest('pushover', 'testPushoverResult'));
+
+    document.getElementById('testAll').addEventListener('click', async () => {
+      const btn = document.getElementById('testAll');
+      const ids = ['testTransmissionResult', 'testSonarrResult', 'testRadarrResult', 'testPushoverResult'];
+      const services = ['transmission', 'sonarr', 'radarr', 'pushover'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.textContent = 'Testing…'; el.style.color = 'var(--arr-text-muted)'; }
+      });
+      btn.disabled = true;
+      try {
+        const r = await fetch(API + '/api/test?service=all');
+        const data = await r.json();
+        services.forEach((svc, i) => {
+          const el = document.getElementById(ids[i]);
+          const res = data[svc];
+          if (res && el) showTestResult(el, res.ok, res.message);
+        });
+      } catch (e) {
+        ids.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) { el.textContent = '\u2717 ' + e.message; el.style.color = '#f85149'; }
+        });
+      }
+      btn.disabled = false;
+    });
+
+    schedulePreset.addEventListener('change', updateScheduleUI);
+
+    renderBlacklistCategories();
+    document.getElementById('blacklistCustomAdd')?.addEventListener('click', () => {
+      const input = document.getElementById('blacklistCustomInput');
+      const ext = (input?.value || '').trim().replace(/^\./, '').toLowerCase();
+      if (!ext) return;
+      const listEl = document.getElementById('blacklistCustomList');
+      if (listEl && !listEl.querySelector('[data-ext="' + ext + '"]')) {
+        const tag = document.createElement('span');
+        tag.className = 'blacklist-tag';
+        tag.setAttribute('data-ext', ext);
+        tag.innerHTML = ext + '<button type="button" aria-label="Remove">×</button>';
+        tag.querySelector('button').addEventListener('click', () => tag.remove());
+        listEl.appendChild(tag);
+        if (input) input.value = '';
+      }
+    });
+    document.getElementById('blacklistCustomInput')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); document.getElementById('blacklistCustomAdd')?.click(); }
+    });
+
+    document.getElementById('copyLastLog')?.addEventListener('click', () => {
+      if (lastRunLog && lastRunLog.textContent && navigator.clipboard) navigator.clipboard.writeText(lastRunLog.textContent);
+    });
+
+    document.getElementById('exportSettings')?.addEventListener('click', async () => {
+      try {
+        const r = await fetch(API + '/api/settings/export');
+        const data = await r.json();
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'untickarr-settings.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+      } catch (e) {
+        alert('Export failed: ' + e.message);
+      }
+    });
+    document.getElementById('importSettingsFile')?.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        const r = await fetch(API + '/api/settings/import', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: text
+        });
+        if (!r.ok) {
+          const err = await r.json().catch(() => ({}));
+          throw new Error(err.detail || r.statusText);
+        }
+        await load();
+        e.target.value = '';
+      } catch (err) {
+        alert('Import failed: ' + err.message);
+        e.target.value = '';
+      }
+    });
+
+    function downloadLogs(format) {
+      const url = API + '/api/logs/export?format=' + (format === 'csv' ? 'csv' : 'txt');
+      fetch(url).then(r => r.blob()).then(blob => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = format === 'csv' ? 'untickarr-logs.csv' : 'untickarr-logs.txt';
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }).catch(e => alert('Download failed: ' + e.message));
+    }
+    document.getElementById('downloadLogsTxt')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      downloadLogs('txt');
+    });
+    document.getElementById('downloadLogsCsv')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      downloadLogs('csv');
+    });
+
+    bindToggles();
+    load();
+    setActiveNav(sectionFromHash());
+  </script>
+</body>
+</html>

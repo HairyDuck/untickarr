@@ -1,0 +1,25 @@
+# Untickarr – skip junk files in Transmission torrents tagged by *arr
+services:
+  untickarr:
+    image: ghcr.io/hairyduck/untickarr:latest
+    build: .
+    container_name: untickarr
+    ports:
+      - "4444:4444"
+    volumes:
+      - ./data:/data
+    environment:
+      TZ: Europe/London
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:4444/health')",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s

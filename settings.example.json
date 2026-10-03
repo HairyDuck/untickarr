@@ -1,0 +1,42 @@
+{
+  "transmission": {
+    "enabled": true,
+    "host": "transmission",
+    "port": 9091,
+    "path": "/transmission/rpc",
+    "use_ssl": false,
+    "username": "",
+    "password": ""
+  },
+  "sonarr": {
+    "enabled": false,
+    "base_url": "http://sonarr:8989",
+    "api_key": ""
+  },
+  "radarr": {
+    "enabled": false,
+    "base_url": "http://radarr:7878",
+    "api_key": ""
+  },
+  "pushover": {
+    "enabled": false,
+    "user_key": "",
+    "api_token": "",
+    "notify_on_remove": true,
+    "notify_on_run_complete": false,
+    "notify_on_error": true
+  },
+  "managed_tags": ["tv-sonarr", "tv-radarr", "whisparr"],
+  "blacklisted_extensions": [
+    "exe", "bat", "cmd", "com", "msi", "dll",
+    "jpg", "jpeg", "png", "gif", "bmp", "webp", "ico", "svg",
+    "nfo", "txt", "url", "html", "htm", "pdf", "doc", "docx",
+    "sfv", "srr", "sample", "thumbs", "db"
+  ],
+  "run_interval_seconds": 300,
+  "on_remove_all_unwanted": "blocklist_only",
+  "scheduler_paused": false,
+  "run_cooldown_seconds": 0,
+  "remove_delete_data": true,
+  "whitelisted_extensions": ["mkv", "mp4"]
+}
