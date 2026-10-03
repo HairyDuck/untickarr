@@ -47,7 +47,7 @@ Open http://localhost:4444 and enter Transmission (and optional Sonarr / Radarr 
 
 Copy [`settings.example.json`](settings.example.json) into `data/settings.json` if you prefer files over the UI. Never commit a filled-in settings file.
 
-Until the first GHCR image is published, build locally:
+To build from source instead of GHCR:
 
 ```bash
 docker compose build
