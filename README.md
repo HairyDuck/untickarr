@@ -1,4 +1,4 @@
-# Untickarr
+﻿# Untickarr
 
 [![License: MIT](https://img.shields.io/github/license/HairyDuck/untickarr)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/HairyDuck/untickarr?style=flat)](https://github.com/HairyDuck/untickarr/stargazers)
@@ -10,7 +10,13 @@ Open source (MIT). Skip junk files inside Transmission torrents before they land
 
 Untickarr is a Docker app for the Servarr stack. It watches torrents with *arr labels (for example `tv-sonarr`, `tv-radarr`, `whisparr`), **unticks** blacklisted files (`.nfo`, `.exe`, images), and if a torrent is *only* junk it can **remove** it, **blocklist** the release in Sonarr or Radarr, and notify you.
 
-It is **not** [Cleanuparr](https://github.com/Cleanuparr/Cleanuparr). Cleanuparr handles stalled, slow, and failed-import queues. Untickarr handles file selection inside Transmission. They work well together.
+It is part of the same HairyDuck companion set as [Giveuparr](https://github.com/HairyDuck/giveuparr) (fair try on missing Wanted items, then unmonitor). It is **not** [Cleanuparr](https://github.com/Cleanuparr/Cleanuparr). Cleanuparr handles stalled, slow, and failed-import queues. Untickarr handles file selection inside Transmission. They work well together.
+
+| Companion | Job |
+| --- | --- |
+| **Untickarr** | Skip junk files inside Transmission torrents |
+| [Giveuparr](https://github.com/HairyDuck/giveuparr) | Fair try on missing Wanted items, then unmonitor |
+| [Cleanuparr](https://github.com/Cleanuparr/Cleanuparr) | Stalled, failed import, and malware queue cleanup |
 
 > [!IMPORTANT]
 > **Features**
@@ -60,7 +66,7 @@ docker compose up -d
 ### Synology Container Manager
 
 1. Copy this project to `docker/untickarr/` on the NAS.
-2. **Container Manager** → **Project** → create from that folder.
+2. **Container Manager** â†’ **Project** â†’ create from that folder.
 3. Keep port `4444:4444` and volume `./data:/data`.
 4. Open `http://<nas-ip>:4444`.
 
@@ -80,24 +86,24 @@ Tags must match Transmission labels. Sonarr/Radarr custom formats and download-c
 - **Transmission:** host, port, path (`/transmission/rpc`), SSL, username/password.
 - **Managed tags:** comma-separated labels to process.
 - **Blacklisted file types:** extensions without dots (`exe`, `jpg`, `nfo`).
-- **When unwanted:** remove only / blocklist only / blocklist and search; keep files on disk; optional whitelist (`mkv`, `mp4`) so “all junk” removal only runs if a wanted extension was expected.
-- **Sonarr / Radarr:** base URL and API key. Tag containing `sonarr` → Sonarr; `radarr` → Radarr.
+- **When unwanted:** remove only / blocklist only / blocklist and search; keep files on disk; optional whitelist (`mkv`, `mp4`) so â€œall junkâ€ removal only runs if a wanted extension was expected.
+- **Sonarr / Radarr:** base URL and API key. Tag containing `sonarr` â†’ Sonarr; `radarr` â†’ Radarr.
 - **Pushover:** optional notifications.
 - **Schedule:** interval, pause scheduler, Run now cooldown.
 - **Backup:** export/import JSON.
 
 ## API
 
-- `GET` / `POST` `/api/settings` – read or save settings
-- `GET` `/api/settings/export` – export JSON
-- `POST` `/api/settings/import` – import JSON
-- `POST` `/api/run` – run once (429 if cooldown)
-- `POST` `/api/preview` – dry-run
-- `GET` `/api/status` – last run and scheduler
-- `GET` `/api/logs` – history
+- `GET` / `POST` `/api/settings` â€“ read or save settings
+- `GET` `/api/settings/export` â€“ export JSON
+- `POST` `/api/settings/import` â€“ import JSON
+- `POST` `/api/run` â€“ run once (429 if cooldown)
+- `POST` `/api/preview` â€“ dry-run
+- `GET` `/api/status` â€“ last run and scheduler
+- `GET` `/api/logs` â€“ history
 - `GET` `/api/logs/export?format=txt|csv`
-- `GET` `/health` or `/api/health` – Transmission check (200 or 503)
-- `GET` `/api/test?service=...` – Transmission, Sonarr, Radarr, or Pushover
+- `GET` `/health` or `/api/health` â€“ Transmission check (200 or 503)
+- `GET` `/api/test?service=...` â€“ Transmission, Sonarr, Radarr, or Pushover
 
 Settings persist in `/data/settings.json`. Mount `/data` so they survive restarts.
 
